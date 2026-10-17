@@ -1,0 +1,29 @@
+* {
+    font-family: 'Fredoka', cursive, sans-serif;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+}
+body {
+    background-color: #fef08a;
+    background-image: radial-gradient(#fde047 2px, transparent 2px), radial-gradient(#fde047 2px, #fef9c3 2px);
+    background-size: 40px 40px;
+    background-position: 0 0, 20px 20px;
+}
+@keyframes float-gentle {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+}
+.animate-float {
+    animation: float-gentle 3s ease-in-out infinite;
+}
+.btn-3d {
+    transition: all 0.1s ease;
+    box-shadow: 0 8px 0px rgba(0,0,0,0.18);
+}
+.btn-3d:active {
+    transform: translateY(6px);
+    box-shadow: 0 2px 0px rgba(0,0,0,0.18);
+}
+.card-shadow {
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08);
+}

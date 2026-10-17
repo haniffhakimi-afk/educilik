@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Matematik Cilik - EduCilik</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="flex flex-col items-center justify-center p-4 min-h-screen">
+    <div class="w-full max-w-md">
+        <header class="bg-white rounded-3xl p-4 shadow-lg border-4 border-amber-300 flex items-center justify-between mb-4">
+            <a href="index.html" class="bg-rose-100 hover:bg-rose-200 text-rose-800 px-3 py-1.5 rounded-2xl font-bold text-xs">🏠 Menu Utama</a>
+            <div class="font-extrabold text-amber-700">🔢 Matematik Cilik</div>
+            <div class="bg-amber-100 px-3 py-1 rounded-2xl font-bold text-amber-700">⭐ <span id="star-score">0</span></div>
+        </header>
+
+        <main class="bg-white rounded-3xl p-6 shadow-2xl border-4 border-amber-200 text-center">
+            <span id="cat-badge" class="px-3 py-1 rounded-full text-xs font-bold bg-amber-100 text-amber-800">Latihan</span>
+            <h1 id="q-text" class="text-xl font-bold text-slate-800 my-4"></h1>
+            <div id="visual-box" class="bg-amber-50 border-2 border-dashed border-amber-200 rounded-2xl p-4 my-4 min-h-[120px] flex items-center justify-center flex-wrap gap-3 text-5xl"></div>
+            <div id="opt-box" class="grid grid-cols-2 gap-3"></div>
+            <p id="feedback-msg" class="mt-4 font-bold text-sm hidden"></p>
+        </main>
+    </div>
+
+    <script>
+        const questions = [
+    {
+        "category": "Mengira Nombor 1–10",
+        "text": "Ada berapa biji epal merah di bawah?",
+        "items": [
+            "🍎",
+            "🍎",
+            "🍎",
+            "🍎",
+            "🍎"
+        ],
+        "options": [
+            "4",
+            "5",
+            "6",
+            "3"
+        ],
+        "correct": "5",
+        "explanation": "Mari kira sama-sama: 1, 2, 3, 4, 5 biji epal!"
+    },
+    {
+        "category": "Tambah Asas",
+        "text": "2 ekor itik tambah 1 ekor itik jadi berapa?",
+        "items": [
+            "🦆",
+            "🦆",
+            "➕",
+            "🦆"
+        ],
+        "options": [
+            "2",
+            "3",
+            "4",
+            "5"
+        ],
+        "correct": "3",
+        "explanation": "2 ekor itik ditambah 1 ekor lagi menjadi 3 ekor itik!"
+    },
+    {
+        "category": "Tolak Asas",
+        "text": "Ada 4 biji belon, 1 belon pecah. Tinggal berapa?",
+        "items": [
+            "🎈",
+            "🎈",
+            "🎈",
+            "💥"
+        ],
+        "options": [
+            "2",
+            "3",
+            "4",
+            "1"
+        ],
+        "correct": "3",
+        "explanation": "4 tolak 1 tinggal 3 biji belon yang masih elok!"
+    },
+    {
+        "category": "Mengenal Bentuk",
+        "text": "Antara berikut, yang manakah bentuk Bulat?",
+        "items": [
+            "🔴",
+            "🟦",
+            "🔺",
+            "⭐"
+        ],
+        "options": [
+            "🔴 Bulat",
+            "🟦 Petak",
+            "🔺 Segi Tiga",
+            "⭐ Bintang"
+        ],
+        "correct": "🔴 Bulat",
+        "explanation": "Bola merah itu berbentuk bulat seperti roda!"
+    },
+    {
+        "category": "Pola & Urutan",
+        "text": "Lengkapkan pola ini: Pisang, Anggur, Pisang, [ ? ]",
+        "items": [
+            "🍌",
+            "🍇",
+            "🍌",
+            "❓"
+        ],
+        "options": [
+            "🍇 Anggur",
+            "🍌 Pisang",
+            "🍉 Tembikai",
+            "🍍 Nanas"
+        ],
+        "correct": "🍇 Anggur",
+        "explanation": "Selepas pisang ialah buah anggur mengikut giliran!"
+    },
+    {
+        "category": "Perbandingan Saiz",
+        "text": "Haiwan manakah yang bersaiz paling BESAR?",
+        "items": [
+            "🐘",
+            "🐁",
+            "🐜"
+        ],
+        "options": [
+            "🐘 Gajah",
+            "🐁 Tikus",
+            "🐜 Semut",
+            "🐝 Lebah"
+        ],
+        "correct": "🐘 Gajah",
+        "explanation": "Gajah ialah haiwan darat yang paling besar!"
+    },
+    {
+        "category": "Kedudukan Objek",
+        "text": "Apakah objek yang berada di TENGAH-TENGAH?",
+        "items": [
+            "🚗",
+            "🧸",
+            "🚀"
+        ],
+        "options": [
+            "🧸 Patung Beruang",
+            "🚗 Kereta",
+            "🚀 Roket",
+            "⚽ Bola"
+        ],
+        "correct": "🧸 Patung Beruang",
+        "explanation": "Patung beruang berada di tengah antara kereta dan roket."
+    },
+    {
+        "category": "Mengira Bintang",
+        "text": "Kira berapakah jumlah bintang kuning yang bersinar?",
+        "items": [
+            "⭐",
+            "⭐",
+            "⭐",
+            "⭐",
+            "⭐",
+            "⭐",
+            "⭐"
+        ],
+        "options": [
+            "6",
+            "7",
+            "8",
+            "5"
+        ],
+        "correct": "7",
+        "explanation": "Semuanya ada 7 bintang yang berkelip!"
+    },
+    {
+        "category": "Tambah Mudah",
+        "text": "3 biji gula-gula tambah 2 biji lagi jadi berapa?",
+        "items": [
+            "🍬",
+            "🍬",
+            "🍬",
+            "➕",
+            "🍬",
+            "🍬"
+        ],
+        "options": [
+            "4",
+            "5",
+            "6",
+            "3"
+        ],
+        "correct": "5",
+        "explanation": "3 tambah 2 menghasilkan 5 biji gula-gula manis!"
+    },
+    {
+        "category": "Mengira Haiwan",
+        "text": "Berapa ekor anak ayam yang comel di sini?",
+        "items": [
+            "🐥",
+            "🐥",
+            "🐥",
+            "🐥",
+            "🐥",
+            "🐥",
+            "🐥",
+            "🐥"
+        ],
+        "options": [
+            "7",
+            "8",
+            "9",
+            "6"
+        ],
+        "correct": "8",
+        "explanation": "Tepat sekali! Ada 8 ekor anak ayam kuning."
+    }
+];
+        let idx = 0, stars = 0;
+
+        function loadQ() {
+            const q = questions[idx];
+            document.getElementById('cat-badge').textContent = q.category;
+            document.getElementById('q-text').textContent = q.text;
+            document.getElementById('feedback-msg').classList.add('hidden');
+
+            const vBox = document.getElementById('visual-box');
+            vBox.innerHTML = '';
+            q.items.forEach(em => {
+                const s = document.createElement('span');
+                s.textContent = em;
+                s.className = 'cursor-pointer transition transform hover:scale-125';
+                vBox.appendChild(s);
+            });
+
+            const oBox = document.getElementById('opt-box');
+            oBox.innerHTML = '';
+            q.options.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.className = 'btn-3d bg-amber-400 hover:bg-amber-500 text-slate-900 font-extrabold py-3 px-4 rounded-2xl border-b-4 border-amber-600';
+                btn.textContent = opt;
+                btn.onclick = () => {
+                    const msg = document.getElementById('feedback-msg');
+                    msg.classList.remove('hidden');
+                    if (opt === q.correct) {
+                        stars++;
+                        document.getElementById('star-score').textContent = stars;
+                        msg.className = 'mt-4 font-bold text-sm text-green-600';
+                        msg.textContent = '🌟 Betul! ' + q.explanation;
+                        setTimeout(() => { idx = (idx + 1) % questions.length; loadQ(); }, 1800);
+                    } else {
+                        msg.className = 'mt-4 font-bold text-sm text-rose-600';
+                        msg.textContent = '💪 Cuba lagi! ' + q.explanation;
+                    }
+                };
+                oBox.appendChild(btn);
+            });
+        }
+        window.onload = loadQ;
+    </script>
+</body>
+</html>
